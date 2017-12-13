@@ -16,46 +16,43 @@ function Banner(id) {
 
 	this.num = 1;
 	this.Timer = null;
+
+	// 下一张
 	this.nextBtn.onclick = function() {
 		_this.nextClick(this)
 
 	}
+	// 上一张
 	this.prevBtn.onclick = function() {
 		_this.prevClick(this)
 	}
-
-	 // function Move() {
-		this.Timer = setInterval(function() {
-			_this.autoPlay(this)
-		}, 2000)
-	 // }
-	 // Move()
-
+    // 自动播放
+	autoPlay = function() {
+		_this.autoPlay(this)
+	}
+	// 启动自动播放
+	_this.autoPlay(this)
+    // 鼠标移入时清除定时器
 	bannerWrapper.onmouseover = function() {
-		clearInterval(this.Timer);
+		clearInterval(_this.Timer);
 	}
-
+    // 鼠标移出时自动播放
 	bannerWrapper.onmouseout = function() {
-		this.Timer = setInterval(function() {
-			_this.autoPlay(this)
-		}, 2000)
-		 // Move()
-		// this.Timer
+		_this.autoPlay(this)
 	}
-
+    // 悬浮小圆点切换轮播
 	for (var i = 0; i < this.ali.length; i++) {
 		this.ali[i].index = i
 		this.ali[i].onmouseover = function() {
-			_this.aliMove(this)
+			_this.aliActive(this)
 		}
 	}
-
 }
+
 Banner.prototype.Transition = function() {
 	this.banner.style.left = -this.num * this.oimgW + 'px'
 	this.banner.style.transition = 'all 1s'
 	this.banner.style.webkitTransition = 'all 1s'
-
 }
 
 Banner.prototype.nextClick = function() {
@@ -88,7 +85,7 @@ Banner.prototype.prevClick = function() {
 			this.num = 8
 		}
 	setTimeout(function() {
-	_this.Transition(this)
+		_this.Transition(this)
 	}, 0)
 	for (var i = 0; i < this.ali.length; i++) {
 		this.ali[i].className = ''
@@ -96,17 +93,17 @@ Banner.prototype.prevClick = function() {
 	this.ali[this.num - 1].className = 'active'
 }
 
-Banner.prototype.aliMove = function() {
+Banner.prototype.aliActive = function(oLi) {
 	for (var i = 0; i < this.ali.length; i++) {
 		this.ali[i].className = ''
 	}
-	this.className = 'active'
-	this.num = this.index + 1
+	oLi.className = 'active'
+	this.num = oLi.index + 1
 	this.banner.style.left = -this.num * this.oimgW + 'px'
 	this.banner.style.transition = 'all 1s'
 	this.banner.style.webkitTransition = 'all 1s'
 }
-Banner.prototype.autoPlay = function() {
+Banner.prototype.imgChange = function() {
 	var _this = this
 	this.num++
 		if (this.num == 9) {
@@ -123,4 +120,11 @@ Banner.prototype.autoPlay = function() {
 		this.ali[i].className = ''
 	}
 	this.ali[this.num - 1].className = 'active'
+}
+
+Banner.prototype.autoPlay = function() {
+	var _this = this
+	_this.Timer = setInterval(function() {
+		_this.imgChange(this)
+	}, 2000);
 }
